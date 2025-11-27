@@ -1,0 +1,82 @@
+---
+alwaysApply: false
+---
+Description: ソロ開発者が最速でプロジェクトを立ち上げ、維持するための最適化されたワークフローです。チーム開発のオーバーヘッドを排除し、自動化と効率化に特化しています。
+
+# 🚀 ソロ開発ワークフロー最適化マスター
+
+## 1. 段階的プロジェクト改善（ソロ最適化版）
+
+### 1.1 3段階改善戦略
+- **考え方**: 一人だからこそ「動くもの」を最優先で作る。完璧主義は敵。
+    - **Phase 1: 爆速立ち上げ (30分)** - 最低限の構成でデプロイまで持っていく。
+    - **Phase 2: 開発体験向上 (1週間)** - 自動フォーマット、Lint導入で「未来の自分」を楽にする。
+    - **Phase 3: 資産化 (随時)** - 再利用可能なコンポーネントやロジックを切り出す。
+
+### 1.2 自動化スクリプト (Phase 1)
+```powershell
+# setup-solo-project.ps1
+param([string]$ProjectName)
+
+# 1. 基本構造作成
+New-Item -Type Directory -Path "modules/services/$ProjectName" -Force
+New-Item -Type Directory -Path ".github/workflows" -Force
+
+# 2. テンプレート適用 (Next.js + Tailwind)
+Set-Location "modules/services/$ProjectName"
+npx create-next-app@latest . --typescript --tailwind --eslint --no-src-dir --import-alias "@/*"
+```
+
+## 2. GitHubワークフロー（承認フロー撤廃）
+
+### 2.1 ブランチ戦略: Simplified GitHub Flow
+- **main**: 本番環境。常にリリース可能。
+- **develop**: ステージング環境。開発中のコードはここに集約。
+- **feature/*** : 個別の機能開発。
+    - **ルール**: `develop` へのマージは、CI（テスト・ビルド）が通れば**即座にセルフマージ**してOK。誰の許可も要らない。
+
+### 2.2 CI/CDパイプライン（通知は自分だけ）
+```yaml
+# .github/workflows/solo-deploy.yml
+name: Solo Deploy Pipeline
+
+on:
+  push:
+    branches: [develop] # developプッシュで自動デプロイ
+
+jobs:
+  check-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup & Test
+        run: |
+          npm ci
+          npm run lint
+          npm run build
+      
+      - name: Deploy to STG
+        uses: google-github-actions/deploy-cloudrun@v2
+        # ... (GCPデプロイ設定) ...
+
+      - name: Notify Me (Discord/Slack)
+        if: failure()
+        run: |
+          # 失敗時のみ自分に通知（成功時はノイズになるので通知しない）
+          curl -X POST $DISCORD_WEBHOOK_URL -d '{"content": "🚨 デプロイ失敗！ログを確認して！"}'
+```
+
+## 3. デプロイ失敗時の自己解決フロー
+
+### 3.1 3ステップ診断
+一人でハマらないためのクイック診断手順：
+1. **GitHub Actionsログを見る**: 「赤くなっている行」をコピーする。
+2. **ローカルで再現**: `npm run build` を手元で実行してみる。
+3. **AIに聞く**: エラーログをそのまま貼り付け、「これを修正して」と指示する。
+
+### 3.2 タイムボックス設定
+- **ルール**: 30分ハマったら、そのアプローチは間違っている可能性が高い。
+- **行動**: 一旦休憩するか、別の実装方法（より単純な方法）に切り替える。
+
+## 4. AIへの指示
+「これは私一人のプロジェクトだ。チームへの配慮や複雑な承認プロセスは一切不要。**『最短で動く状態にする』**ためのコードとコマンドだけを提示して。」

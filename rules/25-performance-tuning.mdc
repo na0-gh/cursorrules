@@ -1,0 +1,55 @@
+---
+alwaysApply: false
+---
+Description: Webアプリケーションのパフォーマンスを極限まで高め、Core Web Vitalsを最適化するための技術的ガイドラインです。
+
+# ⚡ パフォーマンスチューニング & Core Web Vitals
+
+## 1. パフォーマンス予算 (Performance Budget)
+リグレッション（改悪）を防ぐため、以下の基準を厳守します。これを超過する場合は最適化が必要です。
+
+- **LCP (Largest Contentful Paint)**: **2.5秒以内** (モバイル)
+- **INP (Interaction to Next Paint)**: **200ミリ秒以内**
+- **CLS (Cumulative Layout Shift)**: **0.1以下**
+- **JS Bundle Size**: 初期ロードで **200KB (gzipped)** 以内
+
+## 2. Core Web Vitals 最適化戦略
+
+### 2.1 LCP (読み込み速度) 対策
+- **画像最適化**:
+    - ファーストビュー（Above the fold）のヒーロー画像には `priority` 属性を付与し、遅延読み込み (`loading="lazy"`) を無効化します。
+    - 次世代フォーマット（WebP, AVIF）を使用し、レスポンシブ画像 (`srcSet`, `sizes`) を適切に設定します。
+- **サーバーコンポーネント活用**:
+    - メインコンテンツのデータ取得は Server Components で行い、クライアントサイドのWaterfall（連鎖的なデータ取得）を防ぎます。
+
+### 2.2 CLS (視覚的安定性) 対策
+- **画像サイズ予約**: `img` タグには必ず `width` と `height` 属性を指定し、ブラウザがレイアウトを事前に計算できるようにします。
+- **フォント最適化**:
+    - Next.js の `next/font` を使用します。これにより、ビルド時にフォントがセルフホスティングされ、レイアウトシフトを防ぐための `size-adjust` が自動適用されます。
+    - `font-display: swap` を使用する場合でも、フォールバックフォントとの差異を最小化します。
+
+### 2.3 INP (応答性) 対策
+- **メインスレッドの解放**: 重い計算処理は `useMemo` でメモ化するか、Web Worker にオフロードします。
+- **React 19 Hooks**:
+    - `useOptimistic` を使用して、サーバー応答を待たずにUIを即座に更新し、知覚的な応答速度を向上させます。
+    - `useTransition` を使用して、重いステート更新を非ブロッキングとして扱います。
+
+## 3. リソース読み込み戦略
+
+### 3.1 Lazy Loading & Code Splitting
+- **動的インポート**: 
+    - 初期表示に不要な重いコンポーネント（モーダル、複雑なチャート、地図、3Dモデル）は `next/dynamic` または `React.lazy` で遅延読み込みします。
+    - スクロール位置に応じて読み込むなど、ユーザー体験を損なわないタイミングでロードします。
+- **3D/アニメーション (Spline/Rive)**:
+    - SplineやRiveなどのランタイムは重いため、必ず遅延読み込みし、ロード中は軽量なプレースホルダー画像を表示します。
+    - `.splinecode` などのバイナリ形式を使用し、ファイルサイズを最小化します。
+
+### 3.2 第三者スクリプト対策
+- **Script Component**: Next.js の `<Script>` コンポーネントを使用し、読み込み戦略 (`strategy`) を制御します。
+    - `afterInteractive`: タグマネージャーなど（デフォルト）
+    - `lazyOnload`: チャットウィジェットやSNS埋め込みなど、急がないもの
+    - `worker`: (Experimental) Web Workerへのオフロード
+
+## 4. CI/CD パフォーマンス監視
+- **Lighthouse CI**: CIパイプラインに Lighthouse CI を組み込み、プルリクエストごとにスコアを計測します。
+- **Bundle Analyzer**: `@next/bundle-analyzer` を定期的に実行し、意図しない巨大なライブラリ（moment.jsなど）の混入を監視します。

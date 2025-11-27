@@ -1,0 +1,79 @@
+---
+alwaysApply: false
+---
+Description: ReactとNext.jsを使ったコンポーネント指向開発における、一貫性のあるモダンな設計パターンを定義します。React 19, Next.js 15, FSDアーキテクチャに基づいています。
+
+# 1. Feature-Sliced Design (FSD) アーキテクチャ
+プロジェクトのディレクトリ構造は、FSD (Feature-Sliced Design) に基づき、機能単位での凝集度を高め、結合度を下げます。
+
+- **階層構造 (Layers)**:
+    1. **`app/`**: Next.js App Routerのエントリーポイント。ルーティング、グローバルレイアウト、プロバイダー設定のみ。
+    2. **`widgets/`**: 独立した機能ブロックの集合体（例: Header, ProductList）。ページを構成する大きな部品。
+    3. **`features/`**: ユーザーにとって価値あるアクション単位（例: Login, AddToCart, FilterProducts）。ビジネス価値の中核。
+    4. **`entities/`**: ビジネスロジックとデータの定義（例: User, Product, Order）。ドメインモデル。
+    5. **`shared/`**: どこからでも使える再利用可能なコード（例: UI Kit, utils, API client）。ビジネスロジックを持たない。
+
+- **依存ルール**: **「下層は上層を知ってはならない（依存してはならない）」**。
+    - `features` は `entities` と `shared` をインポート可。`widgets` はインポート不可。
+    - `shared` は他のどの層もインポート不可。
+
+# 2. Next.js 15 & Server Actions Patterns
+- **Server Actions + Zod Validation**:
+    - フォーム処理はAPIルートではなく、Server Actionsを使用します。
+    - サーバーサイドで `zod` を用いた厳格なバリデーションを実行します。
+    
+    ```typescript
+    // app/actions.ts
+    'use server'
+    import { z } from 'zod';
+
+    const schema = z.object({
+      email: z.string().email(),
+    });
+
+    export async function subscribe(prevState: any, formData: FormData) {
+      const result = schema.safeParse({ email: formData.get('email') });
+      if (!result.success) {
+        return { errors: result.error.flatten().fieldErrors };
+      }
+      // DB処理など
+      return { message: 'Success' };
+    }
+    ```
+
+- **Server Components First**:
+    - デフォルトで Server Component を使用し、非同期データ取得 (`async/await`) をコンポーネントレベルで行います。
+    - クライアントでの対話が必要な末端の葉（Leaf）コンポーネントのみ `'use client'` を付与します。
+
+# 3. React 19 Modern Hooks
+- **`useActionState`**: Server Actions の実行結果、エラー、ペンディング状態を一元管理します。
+- **`useOptimistic`**: サーバーレスポンスを待たずにUIを更新する「楽観的更新」で、体感速度を向上させます。
+- **`useFormStatus`**: 子コンポーネントから親フォームの送信状態を参照するために使用します。
+- **`use()` API**: `useContext` や Promise の解決に使用し、条件分岐内での呼び出しも可能です。
+
+# 4. コンポーネント設計と型安全性 (TypeScript)
+- **Props Interface**: 拡張性を考慮し、ネイティブのHTML属性を継承します。
+    ```typescript
+    interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+      variant?: 'primary' | 'secondary';
+    }
+    ```
+- **Discriminated Unions (判別可能な共用体)**:
+    - 排他的なプロパティの組み合わせを型で強制します。
+    ```typescript
+    type ButtonVariant = 
+      | { variant: 'primary'; destructive?: never }
+      | { variant: 'destructive'; primary?: never };
+    ```
+- **Generics**: 再利用可能なコンポーネント（SelectBox, List等）にはジェネリクスを使用し、型安全性を維持します。
+
+# 5. コンポーネント分割戦略
+- **単一責任の原則 (Single Responsibility)**:
+    - UIコンポーネント（見た目）と Featureコンポーネント（ロジック・データ取得）を明確に分離します。
+    - 1ファイルが **150行** を超えたら分割のサインです。
+- **CVA (Class Variance Authority)**:
+    - バリアント管理には `cva` を使用し、条件付きクラス名の記述を整理します。`tailwind-merge` と組み合わせて競合を解決します。
+
+# 6. ステート管理のアンチパターン回避
+- **`useEffect` でのデータフェッチ禁止**: `use` フック、Server Components、または SWR/React Query を使用してください。
+- **派生ステートの `useState` 禁止**: props や他の state から計算できる値は、レンダリング中に直接計算するか、重い場合は `useMemo` を使用してください。

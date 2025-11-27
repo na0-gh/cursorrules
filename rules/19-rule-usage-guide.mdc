@@ -1,0 +1,114 @@
+---
+alwaysApply: false
+---
+
+Description: Cursorルールの効果的な使用方法と、どのタイミングでどのルールを活用するべきかをガイドする「メタルール」です。複数のプロジェクトや開発フェーズで迷った時に、このファイルを@メンションして適切なルールの使い分けを確認してください。
+
+# 🎯 Cursorルール使用ガイド
+
+## 1. ルール活用のタイミング
+
+### プロジェクト開始時
+```
+@/.cursor/index.mdc - プロジェクトの目的・価値観の確認
+@/.cursor/rules/01-design-system.mdc - UIの方向性決定
+@/.cursor/rules/02-environment-setup.mdc - 開発環境の設定
+```
+
+### 実装フェーズ
+```
+# フロントエンド開発時
+@/.cursor/rules/04-frontend-basics.mdc
+@/.cursor/rules/05-react-patterns.mdc
+@/.cursor/rules/06-component-driven-development.mdc
+
+# バックエンド開発時
+@/.cursor/rules/07-nodejs-best-practices.mdc
+@/.cursor/rules/08-supabase-rules.mdc
+@/.cursor/rules/09-integration-and-api-contracts.mdc
+```
+
+### 品質向上・デプロイ時
+```
+@/.cursor/rules/10-frontend-quality-assurance.mdc
+@/.cursor/rules/11-code-hygiene-and-refactoring.mdc
+@/.cursor/rules/12-docker-best-practices.mdc
+@/.cursor/rules/13-deployment-paas.mdc
+```
+
+## 2. ルール優先順位
+
+### 最優先 (alwaysApply: true)
+1. **index.mdc** - プロジェクト憲法（全ての判断の基準）
+2. **00-engineer-mindset.mdc** - エンジニア思考原則
+3. **01-design-system.mdc** - デザインシステム
+
+### 状況依存 (alwaysApply: false)
+- 開発フェーズや技術スタックに応じて必要時のみ適用
+- 競合時は上位の優先度ルールに従う
+
+## 3. ルール競合時の解決方法
+
+### 原則
+1. **プロジェクト憲法** > 個別技術ルール
+2. **ユーザー体験** > 技術的美しさ
+3. **シンプルさ** > 複雑な最適化
+
+### 実例
+```
+デザインシステムの色 vs React Patternのスタイル
+→ デザインシステムを優先
+
+DRY原則 vs YAGNI原則
+→ 現在の必要性（YAGNI）を優先、将来必要になった時点でDRY化
+```
+
+## 4. AIへの効果的な指示方法
+
+### 基本パターン
+```
+# 単一ルール適用
+「@/.cursor/rules/05-react-patterns.mdc に従って、このコンポーネントをリファクタリングして」
+
+# 複数ルール組み合わせ
+「@/.cursor/index.mdc の価値観と @/.cursor/rules/01-design-system.mdc のデザイン原則に従って、新しいダッシュボードUIを設計して」
+
+# 競合解決
+「@/.cursor/rules/00-engineer-mindset.mdc のKISS原則を最優先に、このAPIのエラーハンドリングをシンプルに書き直して」
+```
+
+### 効果的な質問例
+```
+❌ 「このコードどう思う？」
+✅ 「@/.cursor/rules/11-code-hygiene-and-refactoring.mdc に照らして、このコードに改善点はある？」
+
+
+## 5. タスク分類と推論深度 (Task Classification)
+
+開発の効率と安全性のバランスを保つため、タスクの「重さ」に応じて、AIの推論深度と出力スタイルを以下の3段階で使い分けてください。
+
+### 🟢 軽量タスク (Lightweight)
+- **対象**: 単一ファイルの数行修正、簡単なバグ調査、設定値の確認、誤字脱字修正。
+- **思考**: 深いブレインストーミングは避け、最短経路で解決策を提示します。
+- **出力**: 1〜2文で簡潔に報告します（「修正しました」「原因はXです」）。チェックリストは不要です。
+- **実行**: 即座に `apply_patch` 等を実行します。
+
+### 🟡 標準タスク (Standard)
+- **対象**: 機能追加、複数ファイルにまたがる変更、コンポーネント作成、リファクタリング。
+- **思考**: 変更の影響範囲を考慮し、実装手順を整理してから着手します。
+- **出力**:
+    1. 目的と影響範囲の要約（2〜3文）
+    2. **3〜7項目のTodoリスト（チェックリスト）**
+    3. 実装完了後の簡潔な要約
+- **実行**: チェックリストに従い、段階的に変更を適用します。
+
+### 🔴 重要タスク (Critical)
+- **対象**:
+    - **認証/認可**に関わる変更
+    - **DBスキーマ**の変更
+    - **課金/決済**ロジックの変更
+    - **インフラ構成**の大幅な変更
+    - 後方互換性を壊す変更
+- **思考**: 「何が壊れる可能性があるか？」を最優先に考え、ロールバック手順まで含めて計画します。
+- **出力**: 詳細な**実装計画書（Plan）**を作成し、ユーザーの**明示的な承認**を得てから作業を開始します。
+- **実行**: 承認後、慎重に1ステップずつ実行し、都度確認を行います。

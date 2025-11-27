@@ -1,0 +1,49 @@
+---
+alwaysApply: false
+---
+Description: Dockerを使って、開発環境や本番環境用のコンテナイメージを構築する際のベストプラクティスを定義します。Dockerfileの作成・編集に関する質問があった場合に適用してください。
+
+# 1. イメージはできるだけ小さく保つ
+- **考え方**: イメージサイズが小さいと、ビルドやデプロイが高速になり、ストレージを節約できます。また、不要なライブラリやツールが含まれないため、セキュリティリスクも低減します。
+- **AIへの指示**: 「このDockerfile、もっとイメージサイズを小さくするにはどうすればいいかな？改善点を教えて。」
+
+# 2. `.dockerignore` を活用する
+- **考え方**: `COPY . .` のような命令を実行する際、`.dockerignore`ファイルに記述されたファイルやフォルダは、Dockerのビルドコンテキストから除外されます。`node_modules`や`.git`、ログファイルなど、イメージに含めるべきでないものを指定することで、ビルドを高速化し、不要な情報がイメージに含まれるのを防ぎます。
+- **AIへの指示**: 「Node.jsプロジェクト用の、一般的な`.dockerignore`ファイルの内容を生成してほしい。」
+
+# 3. マルチステージビルドで本番用イメージを最適化する
+- **考え方**: 開発時には多くのツール（TypeScript, ESLint, テストライブラリなど）が必要ですが、本番環境で実際にアプリケーションを動かすのにこれらは不要です。マルチステージビルドを使い、ビルド用のステージと、実行用のステージを分けることで、本番用イメージには本当に必要なファイルだけを含めることができます。
+- **実践方法**:
+    ```Dockerfile
+    # ステージ1: ビルド環境
+    FROM node:20-alpine AS builder
+    WORKDIR /app
+    COPY package*.json ./
+    RUN npm install
+    COPY . .
+    RUN npm run build
+
+    # ステージ2: 本番環境
+    FROM node:20-alpine
+    WORKDIR /app
+    COPY --from=builder /app/package*.json ./
+    COPY --from=builder /app/node_modules ./node_modules
+    COPY --from=builder /app/dist ./dist
+    CMD [ "node", "dist/main.js" ]
+    ```
+- **AIへの指示**: 「このNext.jsアプリケーション用のDockerfileを、マルチステージビルドを使って本番用に最適化してほしい。」
+
+# 4. ベースイメージは具体的なバージョンを指定する
+- **考え方**: `node:latest`のようなタグを使うと、いつの間にかメジャーバージョンが変わり、ビルドが失敗する原因になります。`node:20-alpine`のように、バージョンと種類（`alpine`は軽量版）を明記することで、誰がいつビルドしても同じ結果になる「再現性」を担保します。
+- **AIへの指示**: 「このPythonアプリのベースイメージ、`python:3.11-slim`と`python:3.11`ではどう違うの？どちらがおすすめ？」
+
+# 5. rootユーザーで実行しない
+- **考え方**: デフォルトでは、コンテナ内のプロセスはrootユーザーで実行されます。これはセキュリティ上のリスクです。専用のユーザーを作成し、そのユーザーでアプリケーションを実行するようにしましょう。
+- **実践方法**:
+    ```Dockerfile
+    # ... (前略)
+    RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+    USER appuser
+    CMD [ "node", "dist/main.js" ]
+    ```
+- **AIへの指示**: 「このDockerfileの最後に、セキュリティを考慮して、root以外の一般ユーザーでプロセスを実行するような設定を追加してほしい。」

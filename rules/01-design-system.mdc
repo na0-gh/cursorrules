@@ -1,0 +1,106 @@
+---
+alwaysApply: true
+---
+Description: このプロジェクトのデザインに関する唯一の真実（Single Source of Truth）です。全てのUIコンポーネントとレイアウトは、このファイルで定義された原則に厳格に従ってください。AIとして、あなたが生成するCSSやコンポーネントのスタイルは、必ずこのファイルの定義を参照してください。
+
+# 1. デザイン理念 (Design Philosophy)
+- **コンセプト**: 「効率と集中」をテーマにした、機能的でモダンなデザイン。開発者ツールやダッシュボードに適した、情報密度が高く視認性の良いインターフェース
+- **キーワード**: モダン, 機能的, 直感的, アクセシブル, 効率的, データ重視
+- **Bento Grid**: 情報を矩形のグリッドに整理し、視覚的な階層構造とリズムを生み出すレイアウトを採用します。
+
+# 2. デザイン意思決定マトリクス (Design Trade-offs)
+デザイン上の競合が発生した場合、以下の優先順位に従って決定します。
+
+1.  **Level 1: 譲れない基準 (Non-negotiable)**
+    - アクセシビリティ (WCAG AA)、データセキュリティ、法的コンプライアンス
+2.  **Level 2: ユーザー中心 (User-Centric)**
+    - ユーザビリティ、パフォーマンス、明確さ (Clarity)
+3.  **Level 3: ビジネス目標 (Business Goals)**
+    - コンバージョン、ブランド一貫性、差別化
+4.  **Level 4: 美的洗練 (Aesthetic Refinement)**
+    - 視覚的魅力、楽しさ (Delight)、トレンド
+
+# 3. カラーパレット (Color Palette - Tailwind v4 / OKLCH)
+Tailwind CSS v4の `oklch` 色空間を使用し、知覚的に均一な色調を実現します。
+
+- **彩度予算 (Saturation Budget)**:
+    - **Neutral (90%)**: 背景やベース (`bg-white`, `bg-gray-50`)
+    - **Content (8%)**: コンテンツエリア (`text-gray-900`, `border-gray-200`)
+    - **Accent/CTA (2%)**: アクションボタンや強調 (`bg-blue-600`) - ここに彩度を集中させる。
+
+- **プライマリ (primary)**: `oklch(0.6 0.15 250)` (ブランドカラー、主要なボタンやリンク)
+- **セカンダリ (secondary)**: `oklch(0.5 0.15 250)` (補足的な情報)
+- **背景 (background)**:
+    - `main`: `#FFFFFF`
+    - `sub`: `#F3F4F6`
+    - `dark`: `#121212` (純粋な黒 `#000000` は使用禁止)
+- **テキスト (text)**:
+    - `primary`: `#111827`
+    - `secondary`: `#4B5563`
+- **アクセント (accent)**: `#F59E0B`
+- **境界線 (border)**: `#E5E7EB`
+- **状態 (status)**:
+    - `success`: `#10B981`
+    - `error`: `#EF4444`
+    - `warning`: `#FBBF24`
+
+# 4. スペーシングとリズム (8px Grid System)
+空間的リズムは全て **8px** を基本単位とします。
+
+- **近接性のルール (Proximity Rules)**:
+    - グループ**内**の余白 < グループ**間**の余白 (必ず守る)
+    - 比率目安: 内部(Internal) : 外部(External) = 1 : 2~4
+- **スケール**:
+    - `gap-1` (4px): 最小単位
+    - `gap-2` (8px): コンポーネント内部
+    - `gap-4` (16px): 関連要素のグルーピング
+    - `gap-6` (24px): セクション内部の区切り
+    - `gap-8` (32px): 明確なグループの分離
+    - `gap-12` (48px): メジャーなセクション区切り
+
+# 5. レイアウトパターン (Bento Grids & Container Queries)
+- **Bento Grid**:
+    - `grid grid-cols-1 md:grid-cols-3 gap-4 auto-rows-[200px]` を基本パターンとします。
+    - **Subgrid**: カード内部のアライメントを揃えるために `grid-template-columns: subgrid` を活用します。
+- **視覚的重量 (Visual Weight)**:
+    - **Focal Point**: 1画面につき主要な焦点は **1つ** (最大でも2つ)。3つ以上はカオスです。
+    - **Horizontal Balance**: 左右の視覚的な重さが釣り合っているか確認してください。
+
+# 6. タイポグラフィ (Typography & Scale)
+- **フォント**: `Inter Variable`, `-apple-system`, `BlinkMacSystemFont`, `sans-serif`
+- **視覚的補正 (Optical Size Compensation)**:
+    - **小サイズ (12-14px)**: 少しウェイトを上げる (Regular -> Medium) ことで可読性を確保。
+    - **大サイズ (36px+)**: ウェイトを下げる (Bold -> Light/Regular) か、引き締めることで上品さを出す。
+- **スケール**:
+    - `Display (H1)`: `text-4xl` -> `text-6xl` / Weight: 700
+    - `Heading (H2)`: `text-3xl` -> `text-5xl` / Weight: 700
+    - `Subheading (H3)`: `text-xl` -> `text-3xl` / Weight: 600
+    - `Body`: `text-base` (16px) / Weight: 400
+- **Line Height**:
+    - Headlines: `1.1` - `1.25` (Tight)
+    - Body: `1.5` (Relaxed)
+
+# 7. モダンUI表現 (Modernity Boundary)
+- **角の丸み (Border Radius)**:
+    - Button: `rounded-lg` (8px)
+    - Card: `rounded-xl` (12px) ~ `rounded-2xl` (16px)
+    - Badge/Pill: `rounded-full`
+- **影 (Shadows)**:
+    - 柔らかく、大きなぼかしを持つ影を使用します。
+    - `shadow-xl`: `0 20px 25px -5px rgb(0 0 0 / 0.1)`
+- **グラスモーフィズム (Glassmorphism 2.0)**:
+    - `backdrop-blur-md` + `bg-white/10` + **`border-white/20`**
+
+# 8. モバイルファースト戦略 (Mobile-First)
+- **ブレークポイント**:
+    - `Mobile`: `< 640px`
+    - `Tablet`: `≥ 640px` (`sm:`)
+    - `Desktop`: `≥ 1024px` (`lg:`)
+    - `Wide`: `≥ 1280px` (`xl:`)
+- **タッチターゲット**:
+    - 全てのインタラクティブ要素は **44px × 44px 以上** のタップ領域を確保してください。
+
+# 9. アクセシビリティ基準 (Accessibility Standards)
+- **WCAG 2.1 Level AA** 準拠。
+- **キーボード操作**: `focus-visible` インジケータを常に維持。
+- **コントラスト比**: テキスト `4.5:1` 以上、大型テキスト `3:1` 以上を確保。
