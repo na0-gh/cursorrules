@@ -1,4 +1,4 @@
-# 🚀 Ohiro Cursor Rules (Solo Full-Stack Optimized)
+# 🚀 Cursor Rules (Solo Full-Stack Optimized)
 
 このリポジトリは、Cursor AIエディタのための包括的なルールセットです。
 ソロ開発者が「開発・デザイン・マーケティング・PM」の全領域をワンオペで高速かつ高品質に実行するために最適化されています。
