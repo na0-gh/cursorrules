@@ -35,3 +35,25 @@ Description: このプロジェクトで定義されている全てのルール�
 | **`23-security-policy.mdc`** | 0: 思想と哲学 | OWASP Top 10に基づくセキュリティポリシー。 |
 | **`24-growth-marketing.mdc`** | 0: 思想と哲学 | グロースマーケティング、行動経済学、KPI設定。 |
 | **`25-performance-tuning.mdc`** | 4: 品質保証 | Core Web Vitals、パフォーマンス予算、最適化戦略。 |
+| **`26-implementation-process.mdc`** | 1: 要求と設計 | **【必須プロセス】** システム開発要求時の実装プロセス（Phase 0-5）。要求分析、設計、実装の段階的アプローチ。 |
+| **`27-testing-strategy.mdc`** | 4: 品質保証 | テスト戦略と自動化の方針。Unit/Integration/E2Eの比率、カバレッジ目標。 |
+| **`28-observability-and-logging.mdc`** | 4: 品質保証 | 構造化ログ、モニタリング、エラー追跡の標準ルール。運用時のトラブルシューティング効率化。 |
+| **`29-ai-product-rules.mdc`** | 2: 実装 (バック) | AI機能をプロダクトに実装する際の設計原則、プロンプト管理、安全基準。 |
+| **`30-non-functional-requirements.mdc`** | 1: 要求と設計 | パフォーマンス、セキュリティ、信頼性などの非機能要件の定量的目標値と合格ライン。 |
+| **`31-product-vision-and-problem-framing.mdc`** | 1: 要求と設計 | プロダクトのビジョン、課題定義、成功指標を明確にするルール。 |
+| **`32-functional-requirements-and-usecases.mdc`** | 1: 要求と設計 | ユーザーストーリー、受け入れ条件、ユースケースを定義するルール。 |
+| **`33-domain-modeling-and-glossary.mdc`** | 1: 要求と設計 | ドメイン概念の整理、用語集（Ubiquitous Language）、エンティティ定義。 |
+| **`34-data-modeling-and-naming.mdc`** | 3: 実装 (バック) | データベースのテーブル設計、カラム命名規則、マイグレーション運用。 |
+| **`35-project-management-lite.mdc`** | 1: 環境とワークフロー | タスク管理、優先順位付け、イテレーションの運用ルール。軽量なPMガイドライン。 |
+| **`36-code-review-guidelines.mdc`** | 4: 品質保証 | コードレビューの観点、コメントの基準、マージ判断のガイドライン。 |
+| **`37-ux-research-and-ia.mdc`** | 1: 要求と設計 | 実装前のUXリサーチ、画面遷移設計、情報設計（IA）に関するルール。 |
+| **`38-forms-validation-and-error-ux.mdc`** | 2: 実装 (フロント) | フォームのバリデーションタイミング、エラー表示位置、入力支援UX。 |
+| **`39-layout-and-responsive-strategy.mdc`** | 2: 実装 (フロント) | ブレークポイント戦略、レスポンシブデザインの方針、モバイル時の表示制御。 |
+| **`40-architecture-and-layering.mdc`** | 2: 実装 (フロント) | アプリケーション全体のレイヤリング、依存方向、責務分担に関するアーキテクチャルール。 |
+| **`41-requirements-clarification.mdc`** | 1: 要求と設計 | 要件が曖昧な場合は、実装より先に要件定義を完了させるためのルール。 |
+| **`42-rules-skills-map.mdc`** | メタルール | 既存ルールの内容を読み解いた上で、rules/skillsの役割分担を整理した対応表。 |
+| **`43-auto-skill-routing.mdc`** | メタルール | 会話文脈から適用すべきrules/skillsを自動選定し、ユーザー承認ゲートで実行するための運用ルール。 |
+| **`44-subagent-usage.mdc`** | メタルール | **【常時適用】** サブエージェントの自動使用基準（いつ使う/使わない）を定義。モデル選択とコンテキスト最適化の観点を含む。 |
+| **`45-image-generation-flow.mdc`** | 2: 実装 (フロント) | 画像生成と組み込みフロー（LP/アプリ）。画像指定がない場合の生成→配置→参照まで実施。 |
+| **`46-context-optimization-and-model-selection.mdc`** | メタルール | **【常時適用】** 品質/トークン比の最大化を実現するための戦略。リスクベース読み込み、diff優先、Working Summary、モデル選択、役割分担。 |
+| **`00-agent-context.mdc`** | メタルール | **【常時適用】** このプロジェクトのAIエージェント向けコンテキストファイル。rules/skillsの構造と重要なルールの要点をまとめたインデックス。 |
