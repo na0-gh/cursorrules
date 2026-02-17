@@ -1,0 +1,36 @@
+---
+description: 会話文脈から適用すべきrules/skillsを自動選定し、ユーザー承認ゲートで実行するための運用ルールです。
+globs: []
+---
+# 43. 自動判別と承認ゲート運用
+
+## 目的
+- ユーザーは「承認/否認」だけを行い、AIが自動で判断・実行する。
+- どのrules/skillsを使うかを会話文脈から自動選定する。
+
+## ルール
+1. **自動判別が基本**
+   - 依頼内容から該当するrules/skillsを自動で選ぶ。
+   - `42-rules-skills-map.mdc` を参照して候補を決定する。
+2. **skillsは自動適用が既定**
+   - `disable-model-invocation: true` が明記されていない限り、自動で呼び出す。
+3. **承認ゲート**
+   - 実行前に「適用予定のrules/skills」と「実行内容の要約」を提示する。
+   - ユーザーの **OK/NG/条件付きOK** を待って実行する。
+
+## 出力フォーマット（簡潔）
+- 適用予定のrules/skills（3〜5行以内）
+- 実行内容の要約（1〜3行）
+- 承認待ちの一言
+
+## 例
+```
+適用予定:
+- rules: 41-requirements-clarification, 26-implementation-process
+- skills: requirements-definition
+
+実行内容:
+- 要件定義の成果物を docs/ に作成
+
+OKなら進めます。
+```

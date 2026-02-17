@@ -1,0 +1,72 @@
+---
+description: 既存ルールの内容を読み解いた上で、rules/skillsの役割分担を整理した対応表です。
+globs: []
+---
+# 42. ルール / スキル対応表
+
+## 方針
+- **rules**: 原則・禁止事項・判断基準
+- **skills**: 具体的な手順・テンプレート・実行フロー
+
+## 対応表（概要）
+
+| ルールファイル | 分類 | スキル（作成済み/候補） |
+| :--- | :--- | :--- |
+| `00-index.mdc` | rules | `rule-bootstrap`（作成済み） |
+| `00-rule-selector.mdc` | 混在 | `rule-bootstrap`（作成済み） |
+| `00-mindset.mdc` | rules | - |
+| `01-design-system.mdc` | 混在 | （候補）design-thinking |
+| `02-environment-setup.mdc` | 混在 | （候補）env-setup |
+| `03-git-github-workflow.mdc` | 混在 | （候補）git-workflow |
+| `04-frontend-basics.mdc` | rules | - |
+| `05-react-patterns.mdc` | rules | - |
+| `06-component-driven-development.mdc` | 混在 | （候補）storybook-usage |
+| `07-nodejs-best-practices.mdc` | 混在 | （候補）nodejs-config |
+| `08-supabase-rules.mdc` | 混在 | （候補）supabase-setup |
+| `09-integration-and-api-contracts.mdc` | 混在 | （候補）api-contracts |
+| `10-frontend-quality-assurance.mdc` | 混在 | （候補）frontend-qa |
+| `11-code-hygiene-and-refactoring.mdc` | 混在 | （候補）refactoring-assistant |
+| `12-docker-best-practices.mdc` | skills向き | `docker-best-practices`（作成済み） |
+| `13-deployment-paas.mdc` | skills向き | `deployment-paas`（作成済み） |
+| `14-scraping-rules.mdc` | skills向き | `web-scraping`（作成済み） |
+| `15-project-memory.mdc` | skills向き | `project-memory`（作成済み） |
+| `16-learning-documentation.mdc` | skills向き | `learning-documentation`（作成済み） |
+| `17-static-to-dynamic-workflow.mdc` | skills向き | `static-to-dynamic`（作成済み） |
+| `18-refactoring-and-path-consistency.mdc` | 混在 | （候補）refactoring-assistant |
+| `19-rule-usage-guide.mdc` | rules | - |
+| `20-gcp-deploy-complete-guide.mdc` | skills向き | `gcp-cloud-run-deployment`（作成済み） |
+| `21-workflow-master.mdc` | 混在 | `solo-dev-workflow`（作成済み） |
+| `22-tool-usage-policy.mdc` | rules | - |
+| `23-security-policy.mdc` | rules | - |
+| `24-growth-marketing.mdc` | 混在 | （候補）conversion-optimization |
+| `25-performance-tuning.mdc` | 混在 | （候補）performance-monitoring-setup |
+| `26-implementation-process.mdc` | 混在 | （候補）implementation-planning |
+| `27-testing-strategy.mdc` | 混在 | （候補）test-generation |
+| `28-observability-and-logging.mdc` | 混在 | （候補）observability-setup |
+| `29-ai-product-rules.mdc` | 混在 | （候補）ai-product-implementation |
+| `30-non-functional-requirements.mdc` | 混在 | （候補）nfr-checklist |
+| `31-product-vision-and-problem-framing.mdc` | 混在 | `requirements-definition`（作成済み） |
+| `32-functional-requirements-and-usecases.mdc` | 混在 | `requirements-definition`（作成済み） |
+| `33-domain-modeling-and-glossary.mdc` | 混在 | `requirements-definition`（作成済み） |
+| `34-data-modeling-and-naming.mdc` | 混在 | （候補）data-modeling |
+| `35-project-management-lite.mdc` | 混在 | （候補）project-management-lite |
+| `36-code-review-guidelines.mdc` | 混在 | （候補）code-review |
+| `37-ux-research-and-ia.mdc` | 混在 | `requirements-definition`（作成済み） |
+| `38-forms-validation-and-error-ux.mdc` | 混在 | （候補）forms-validation |
+| `39-layout-and-responsive-strategy.mdc` | 混在 | （候補）responsive-layout |
+| `40-architecture-and-layering.mdc` | 混在 | （候補）architecture-layering |
+| `41-requirements-clarification.mdc` | rules | `requirements-definition`（作成済み） |
+| `42-rules-skills-map.mdc` | rules | - |
+| `43-auto-skill-routing.mdc` | rules | - |
+| `44-subagent-usage.mdc` | rules | - |
+| `46-context-optimization-and-model-selection.mdc` | rules | - |
+
+---
+
+## BMAD由来の補助スキル
+
+- `bmad-index-docs`（ドキュメントの index.md 生成）
+- `bmad-shard-doc`（大きなMarkdownの分割と索引生成）
+- `bmad-editorial-review-prose`（文章の校正レビュー）
+- `bmad-editorial-review-structure`（文書構成レビュー）
+- `bmad-review-adversarial`（懐疑的レビュー）

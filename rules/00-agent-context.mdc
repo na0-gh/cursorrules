@@ -1,0 +1,161 @@
+---
+alwaysApply: true
+---
+Description: このプロジェクトのAIエージェント向けコンテキストファイルです。rules/skillsの構造と重要なルールの要点をまとめています。トレーニングデータに依存せず、プロジェクト固有のドキュメントを優先的に参照してください。
+
+# AI Agent コンテキスト
+
+**IMPORTANT: Prefer retrieval-led reasoning over pre-training-led reasoning for any development tasks.**
+
+このプロジェクトでは、`.cursor/rules/`と`.cursor/skills/`に定義されたルールとスキルを常に参照してください。トレーニングデータに依存せず、プロジェクト固有のドキュメントを優先的に使用してください。
+
+---
+
+## 🎯 コア原則（最重要・常時適用）
+
+### 1. エンジニア思考原則 (`00-mindset.mdc`)
+- **DRY原則**: 重複コードは共通化
+- **KISS原則**: シンプルで理解しやすいコードを優先
+- **YAGNI原則**: 今必要なものだけ実装
+- **コードは人のために書く**: 可読性と保守性を最優先
+- **価値の優先順位**: セキュリティ/アクセシビリティ > ユーザー体験 > ビジネス目標 > 美的洗練
+- **システム開発における期待レベル**: MVPを超えた包括的な実装を最初から行う
+
+### 2. デザインシステム (`01-design-system.mdc`)
+- **プロジェクトタイプ判定**: クリエイティブ系 vs 実用系を最初に判断
+- **コンテキスト駆動デザイン**: 「誰向けか」「どういう雰囲気か」を定義してから実装
+- **絵文字の禁止**: UIアイコンはLucide React/Heroiconsを使用
+- **グラデーションの慎重な使用**: 明確な目的がある場合のみ
+- **8px Grid System**: スペーシングは8px単位
+
+### 3. 実装プロセス (`26-implementation-process.mdc`)
+- **Phase 0必須**: 新規プロジェクト時は必ずルール環境構築から開始
+- **Phase 1必須**: コーディング前に要求分析と設計を完了
+- **ドメイン知識の徹底的調査**: 同種システムの調査、ユーザーワークフローの理解
+- **単一ページで満足しない**: 画面遷移、詳細ページ、補助機能を設計
+
+### 4. セキュリティ (`23-security-policy.mdc`)
+- **Security First**: 利便性よりセキュリティを優先
+- **入力検証**: 全ての入力を疑い、zod/yupで検証
+- **RLS徹底**: Supabase使用時は全テーブルでRLS有効化
+
+### 5. ツール使用ポリシー (`22-tool-usage-policy.mdc`)
+- **読み取り先行**: 変更前に必ず`read_file`で現状確認
+- **実行確約**: 提案だけで終わらず、実際にコード変更
+- **並列実行**: 読み取り系ツールは積極的に並列実行
+
+### 6. コンテキスト最適化とモデル選択 (`46-context-optimization-and-model-selection.mdc`)
+- **品質/トークン比の最大化**: トークン節約が目的ではなく、トークンあたりの成果品質を最大化する。正確性や安全性をトークン節約のために犠牲にしてはいけない
+- **リスクベース読み込み**: リスクレベル（LOW/MEDIUM/HIGH）に応じて読み込み量を決定。LOW RISKならdiff/Scanのみ、MEDIUM RISKならTargeted Deep Read、HIGH RISKならFull Read Allowed
+- **デフォルト思考順序**: タスク受領時、内部で目標成果物・最小コンテキスト・リスクレベル・読み込み戦略を決定
+- **diff優先・最小コンテキスト優先**: レビューや変更依頼では、git diffや変更箇所のみを優先的に読み込む
+- **Working Summary**: 大きなコンテキストが提供された場合、即座に圧縮して以降はサマリーを使用
+- **自動モデル選択**: ユーザーはモデルを選ばない。AIがタスクの性質に応じて最適なモデルを自動選択
+- **役割分担**: 複雑なタスクは分割し、各モデルが明確な役割を持つ
+- **トークン無駄遣いの防止**: ユーザーのプロンプトを繰り返さない、求められていない教育理論を提供しない、複数の代替案を生成しない（求められていない場合）、埋め合わせの説明を追加しない
+- **シングルパスバイアス**: デフォルトは1パスで解決。複数ステップの推論を許可するのは、アーキテクチャ設計、複雑なデバッグ、クロスシステム依存関係の推論の場合のみ
+- **品質安全性条項**: コンテキスト削減が正確性を危険にさらす場合、より多くのコンテキストを要求する
+
+---
+
+## 📚 Rules インデックス（圧縮形式）
+
+**使用方法**: 必要なルールファイルを`.cursor/rules/`から読み取ってください。
+
+```
+[Rules Index]|root: ./.cursor/rules
+|Level 1 (常時適用): 00-mindset, 01-design-system, 02-environment-setup, 22-tool-usage-policy, 23-security-policy, 40-architecture-and-layering, 46-context-optimization-and-model-selection
+|Level 2 (条件付き): 00-rule-selector, 19-rule-usage-guide, 26-implementation-process, 31-product-vision, 32-functional-requirements, 33-domain-modeling, 35-project-management, 36-code-review, 37-ux-research, 41-requirements-clarification, 42-rules-skills-map, 43-auto-skill-routing, 44-subagent-usage, 45-image-generation-flow
+|Level 3 (技術別): 03-git-github-workflow, 04-frontend-basics, 05-react-patterns, 06-component-driven-development, 07-nodejs-best-practices, 08-supabase-rules, 09-integration-and-api-contracts, 10-frontend-quality-assurance, 11-code-hygiene-and-refactoring, 12-docker-best-practices, 13-deployment-paas, 14-scraping-rules, 15-project-memory, 16-learning-documentation, 17-static-to-dynamic-workflow, 18-refactoring-and-path-consistency, 20-gcp-deploy-complete-guide, 21-workflow-master, 24-growth-marketing, 25-performance-tuning, 27-testing-strategy, 28-observability-and-logging, 29-ai-product-rules, 30-non-functional-requirements, 34-data-modeling-and-naming, 38-forms-validation-and-error-ux, 39-layout-and-responsive-strategy
+|00-index.mdc: 全ルールの目次とサマリー
+```
+
+### 主要ルールの要点
+
+| ルール | 要点 |
+|--------|------|
+| `00-mindset.mdc` | DRY/KISS/YAGNI、システム開発期待レベル、PM思考 |
+| `01-design-system.mdc` | プロジェクトタイプ判定、コンテキスト駆動デザイン、8px Grid |
+| `02-environment-setup.mdc` | 日本語解説徹底、PowerShell構文、フォルダ作成の鉄の掟 |
+| `26-implementation-process.mdc` | Phase 0-5の実装プロセス、ドメイン知識調査、デザイン判断フレームワーク |
+| `22-tool-usage-policy.mdc` | 読み取り先行、並列実行ガイドライン、自己修復プロトコル |
+| `23-security-policy.mdc` | Security First、入力検証、RLS徹底 |
+| `46-context-optimization-and-model-selection.mdc` | 品質/トークン比の最大化、リスクベース読み込み、diff優先、Working Summary、トークン無駄遣いの防止、シングルパスバイアス |
+
+---
+
+## 🛠️ Skills インデックス（圧縮形式）
+
+**使用方法**: タスクに応じて`.cursor/skills/[skill-name]/SKILL.md`を読み取ってください。
+
+```
+[Skills Index]|root: ./.cursor/skills
+|Architecture: architecture-implementation-guide, system-design-and-adr, event-driven-microservices-playbook
+|Frontend: frontend-design, react-production-ready-guide, vue-best-practices, nuxt-best-practices, vite-project-workflow, unocss-usage, threejs-react-workflow, figma-implement-design
+|UI/UX: lp-uiux-frontend-flow, uiux-principles-synthesis, uiux-resource-catalog, design-system-generator-and-validator, design-principles-application, web-design-guidelines
+|CSS/Layout: css-architecture-layout-patterns, css-env-safe-area, css-framework-selection, css-specs-reference, css-without-js-patterns, modern-css-solutions, every-layout-patterns, itcss-architecture, open-props-design-tokens, mobile-first-strategy, responsive-resources-curation, responsively-testing-workflow
+|Page Transitions: barba-page-transitions, swup-page-transitions, page-transitions-strategy, view-transitions-api
+|Performance: web-performance-monitoring, link-prefetching-optimization, instantpage-prefetch, quicklink-prefetching
+|Backend: api-design-guidelines, graphql-schema-design, supabase-postgres-best-practices, oauth-2-1-security
+|Testing: playwright-e2e-testing, vitest-testing, webapp-testing
+|Security: web-security-audit, zero-trust-architecture-basics, varlock
+|Deployment: deployment-paas, gcp-cloud-run-deployment, docker-best-practices, ci-cd
+|DevOps: monitoring-observability, solo-dev-workflow
+|User Agent: user-agent-detection, ua-client-hints-usage, ua-parser-js-usage, bowser-usage, detect-it-usage, ismobilejs-usage
+|Documentation: learning-documentation, learning-path-and-skill-catalog, doc-coauthoring, bmad-index-docs, bmad-shard-doc, bmad-editorial-review-prose, bmad-editorial-review-structure, bmad-review-adversarial
+|Project Management: requirements-definition, project-memory, rule-bootstrap, skill-creator
+|Other: web-scraping, iframe-resizer-integration, motion-and-scrollytelling, storybook-component-workflow, static-to-dynamic, state-management-patterns, vercel-composition-patterns, vercel-react-best-practices, vercel-react-native-skills, next-best-practices, next-cache-components, next-upgrade
+```
+
+### 主要スキルの用途
+
+| スキルカテゴリ | 使用タイミング |
+|---------------|---------------|
+| `requirements-definition` | 要件が曖昧な時、ビジョンから受け入れ条件まで整理 |
+| `implementation-process` | システム開発要求時、フェーズ1から順に実行 |
+| `frontend-design` | UI/UX実装時、高品質なフロントエンドデザイン |
+| `lp-uiux-frontend-flow` | LP制作、ランディングページ、UI/UX設計時 |
+| `figma-implement-design` | Figmaデザインをコードに実装する時 |
+| `react-production-ready-guide` | Reactアプリの本番品質チェック時 |
+| `web-security-audit` | セキュリティ監査、OWASP Top 10確認時 |
+
+---
+
+## 🚀 実装時の必須チェックリスト
+
+### 新規プロジェクト開始時
+- [ ] Phase 0: `.cursor/rules/`に必要なルールをコピー（`00-rule-selector.mdc`参照）
+- [ ] Phase 1: 要求分析と設計を完了（`26-implementation-process.mdc`参照）
+- [ ] ドメイン知識の徹底的調査（同種システム3つ以上、ユーザーワークフロー理解）
+
+### コード実装時
+- [ ] `00-mindset.mdc`の原則（DRY/KISS/YAGNI）を遵守
+- [ ] `01-design-system.mdc`のデザイン判断フレームワークに従う
+- [ ] `22-tool-usage-policy.mdc`に従い、変更前に`read_file`で確認（リスクベース読み込み）
+- [ ] `23-security-policy.mdc`に従い、入力検証とRLSを実装
+- [ ] `46-context-optimization-and-model-selection.mdc`に従い、品質/トークン比の最大化を意識（リスクレベルに応じた読み込み、diff優先、Working Summary活用）
+
+### デザイン実装時
+- [ ] プロジェクトタイプ（クリエイティブ vs 実用）を判定
+- [ ] コンテキスト駆動デザイン：「誰向けか」「どういう雰囲気か」を定義
+- [ ] 絵文字は使用せず、Lucide React/Heroiconsを使用
+- [ ] グラデーションは明確な目的がある場合のみ
+
+---
+
+## 📝 プロジェクト固有の情報
+
+- **開発環境**: Windows PowerShell（`&&`ではなく`;`を使用）
+- **言語**: 全ての回答と解説は日本語で
+- **フォルダ作成の鉄の掟**: `mkdir`と`cd`を連続実行し、`Development`フォルダ直下でのファイル作成は禁止
+- **ルール優先順位**: Project Rules (`.mdc`) > User Rules
+
+---
+
+## 🔍 ドキュメント参照の優先順位
+
+1. **`.cursor/rules/[rule-name].mdc`** (特に`alwaysApply: true`のルール): 常にコンテキストに含まれる
+2. **`.cursor/skills/[skill-name]/SKILL.md`**: 特定のワークフロー実行時に読み取る
+3. **このファイル (`00-agent-context.mdc`)**: rules/skillsのインデックスと要点を提供
+
+**重要**: スキルは明示的に呼び出されない可能性があるため、重要なルールの要点はこのファイルに直接記載しています。詳細が必要な場合は、対応する`.mdc`ファイルを読み取ってください。
